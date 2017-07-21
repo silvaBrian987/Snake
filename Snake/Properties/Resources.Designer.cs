@@ -59,14 +59,5 @@ namespace Snake.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Busca un recurso adaptado de tipo System.IO.UnmanagedMemoryStream similar a System.IO.MemoryStream.
-        /// </summary>
-        internal static System.IO.UnmanagedMemoryStream techno {
-            get {
-                return ResourceManager.GetStream("techno", resourceCulture);
-            }
-        }
     }
 }

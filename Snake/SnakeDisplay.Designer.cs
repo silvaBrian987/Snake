@@ -31,8 +31,8 @@
             this.components = new System.ComponentModel.Container();
             this.SnakeTimer = new System.Windows.Forms.Timer(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.lblPuntos = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,6 +51,14 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             // 
+            // lblPuntos
+            // 
+            this.lblPuntos.AutoSize = true;
+            this.lblPuntos.Location = new System.Drawing.Point(61, 16);
+            this.lblPuntos.Name = "lblPuntos";
+            this.lblPuntos.Size = new System.Drawing.Size(0, 13);
+            this.lblPuntos.TabIndex = 1;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -59,14 +67,6 @@
             this.label1.Size = new System.Drawing.Size(43, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Puntos:";
-            // 
-            // lblPuntos
-            // 
-            this.lblPuntos.AutoSize = true;
-            this.lblPuntos.Location = new System.Drawing.Point(61, 16);
-            this.lblPuntos.Name = "lblPuntos";
-            this.lblPuntos.Size = new System.Drawing.Size(0, 13);
-            this.lblPuntos.TabIndex = 1;
             // 
             // SnakeDisplay
             // 
@@ -78,6 +78,7 @@
             this.Name = "SnakeDisplay";
             this.Text = "Snake";
             this.Load += new System.EventHandler(this.SnakeDisplay_Load);
+            this.Resize += new System.EventHandler(this.SnakeDisplay_Resize);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

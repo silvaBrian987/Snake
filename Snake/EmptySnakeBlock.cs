@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Snake
 {
@@ -22,7 +22,7 @@ namespace Snake
         internal override void Eat(Game game)
         {
             Console.WriteLine(this + " eated!");
-            int[] pos = game.Board.GetPositionOnMatrix(Previous);
+            int[] pos = new int[] { Previous.Location.X, Previous.Location.Y };
 
             Previous.Next = new SnakeBlock(this);
             Previous.Next.Next = this;
@@ -31,12 +31,15 @@ namespace Snake
 
             game.Board.AddToMatrix(Previous, pos);
             game.Player.Points++;
+
         }
 
         internal override void Move(Game game, Point NewLocation)
         {
             Console.WriteLine(this + " moved to " + NewLocation);
+            game.Board.AddToMatrix(new EmptyBlock(this));
             Location = NewLocation;
+            game.Board.AddToMatrix(this);
         }
     }
 }

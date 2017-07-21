@@ -27,7 +27,7 @@ namespace Snake
             InitializeBoard();
             InitializeSnake();
             GenerateFood();
-            Direction = WorldConstants.GetPosibleMovements()[System.Windows.Forms.Keys.Up];
+            Direction = WorldConstants.GetPosibleMovements()[System.Windows.Forms.Keys.Right];
         }
 
         private void DefineIfReplacements()
@@ -45,7 +45,7 @@ namespace Snake
                 Console.WriteLine("Snake was on " + Snake + " when collisioned with " + otherBlock + "!");
                 game.GameEnds();
             });
-
+             
             MatrixFinderActions.Add(true, (x, y) => { return new int[] { x, y }; });
             //MatrixFinderActions.Add(false, (x, y) => { return new int[] { x, y }; });
 
@@ -77,9 +77,9 @@ namespace Snake
                 for (int j = 0; j < ySize; j++)
                 {
                     Matrix[i, j] = new EmptyBlock(WorldConstants.BLOCK_SIZE, new Point(auxX, auxY));
-                    auxY += WorldConstants.BLOCK_SIZE.Y;
+                    auxY += 1;
                 }
-                auxX += WorldConstants.BLOCK_SIZE.X;
+                auxX +=1;
                 auxY = WorldConstants.INITIAL_LOCATION.Y;
             }
         }
@@ -91,9 +91,10 @@ namespace Snake
 
             Snake = new SnakeBlock(Matrix[auxX, auxY]);
             SnakeBlock Next = Snake;
-            for (int i = 0; i < 6; i++)
+            for (int i = 1; i < 6; i++)
             {
-                auxY += i;
+                auxY += Direction.Y;
+                auxX += Direction.X;
                 Next.Next = new SnakeBlock(Matrix[auxX, auxY]);
                 Next.Next.Previous = Next;
                 Next = Next.Next;
@@ -116,14 +117,13 @@ namespace Snake
             Block NextBlock = GetBlockOnMatrix(point);
             try
             {
-                Action<Game, Block> collisionAction;
-                Collisionables.TryGetValue(NextBlock.GetType(), out collisionAction);
-                collisionAction.Invoke(game, NextBlock);
-            }
-            catch
+                Collisionables[NextBlock.GetType()].Invoke(game, NextBlock);
+            }catch(NullReferenceException ex)
             {
-
+                Console.WriteLine("Termina el juego");
+                game.GameEnds();
             }
+           
         }
 
         public Block[,] GetMatrix()
@@ -147,7 +147,7 @@ namespace Snake
 
         public Block GetBlockOnMatrix(Point point)
         {
-            return GetBlockOnMatrix(point.X / WorldConstants.BLOCK_SIZE.X, point.Y / WorldConstants.BLOCK_SIZE.Y);
+            return GetBlockOnMatrix(point.X , point.Y );
         }
 
         public void ChangeSnakeDirection(Point NewDirection)
@@ -158,51 +158,49 @@ namespace Snake
 
         public void AddToMatrix(Block block)
         {
-            int[] pos = GetPositionOnMatrix(block);
-            AddToMatrix(block, pos);
+            AddToMatrix(block, new int[] { block.Location.X, block.Location.Y });
         }
 
         public void AddToMatrix(Block block, int[] pos)
         {
             try
             {
+                block.Location = new Point(pos[0], pos[1]);
                 Matrix[pos[0], pos[1]] = block;
-            }catch(IndexOutOfRangeException e)
+            }
+            catch (IndexOutOfRangeException e)
             {
                 game.GameEnds();
             }
         }
 
-        public int[] GetPositionOnMatrix(Block block)
-        {
-            Func<int, int, int[]> funcPos = (a, b) => { return new int[] { a, b }; };
-            int[] fakePos = new int[] { -1, -1 };
-            for (int i = 0; i < Matrix.GetLength(0); i++)
-            {
-                for (int j = 0; j < Matrix.GetLength(1); j++)
-                {
-                    //pos = MatrixFinderActions[Matrix[i, j].Equals(block)].Invoke(i, j);
-                    //bool boolResult = Matrix[i, j].Equals(block);
-                    //MatrixFinderActions.TryGetValue(boolResult, out funcPos);
-                    //pos = funcPos.Invoke(i, j);
-                    try
-                    {
-                        return MatrixFinderActions[Matrix[i, j].Equals(block)].Invoke(i, j);
-                    }
-                    catch (KeyNotFoundException e)
-                    {
+        //public int[] GetPositionOnMatrix(Block block)
+        //{
 
-                    }
-                }
-            }
-            //throw new NullReferenceException("There is no block like block " + block + " in the matrix");
-            return fakePos;
-        }
+        //    int[] fakePos = new int[] { -1, -1 };
+        //    for (int i = 0; i < Matrix.GetLength(0); i++)
+        //    {
+        //        for (int j = 0; j < Matrix.GetLength(1); j++)
+        //        {
+
+        //            try
+        //            {
+        //                return MatrixFinderActions[Matrix[i, j].Equals(block)].Invoke(i, j);
+        //            }
+        //            catch (KeyNotFoundException e)
+        //            {
+
+        //            }
+        //        }
+        //    }
+        //    //throw new NullReferenceException("There is no block like block " + block + " in the matrix");
+        //    return fakePos;
+        //}
 
         public void DestroyBlock(Block block)
         {
             Console.WriteLine(block + " destroyed!");
-            int[] blockPos = GetPositionOnMatrix(block);
+            int[] blockPos = new int[] { block.Location.X, block.Location.Y };
             Matrix[blockPos[0], blockPos[1]] = new EmptyBlock(block);
         }
     }

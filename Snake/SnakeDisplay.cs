@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace Snake.Implementation
 {
@@ -26,21 +26,30 @@ namespace Snake.Implementation
             PosibleMovements = WorldConstants.GetPosibleMovements();
 
             SnakePanel = new BufferedPanel();
-            //SnakePanel.Location = new Point(10, 10);
-            //SnakePanel.Padding = new Padding(10, 10, 10, 10);
-            //SnakePanel.Size = WorldConstants.GetDisplaySize();
-            this.Size = WorldConstants.GetDisplaySize();
-            this.Size = new Size(this.Size.Width + 100, this.Size.Height + 100);
-            SnakePanel.BackColor = Color.Black;
-            SnakePanel.Dock = DockStyle.Fill;
 
             Player player = new Player("Pepe");
             game = new Game(player);
             game.OnGameEnd += OnGameEnd;
 
+            this.Size = WorldConstants.GetDisplaySize();
+            this.Size = new Size(this.Size.Width + 100, this.Size.Height + 100);
+            SnakePanel.BackColor = Color.Black;
+            SnakePanel.Size = WorldConstants.GetDisplaySize();
+            CentrarSnakePanel();
+            //SnakePanel.Size = new Size(game.Board.GetMatrix().GetLength(0) * WorldConstants.BLOCK_SIZE.X, game.Board.GetMatrix().GetLength(1) * WorldConstants.BLOCK_SIZE.Y);
+            //SnakePanel.Dock = DockStyle.
+            //SnakePanel.Anchor = AnchorStyles.None;
+
             SnakePanel.Paint += DrawGame;
 
             Controls.Add(SnakePanel);
+        }
+
+        private void CentrarSnakePanel()
+        {
+            Point centerOfDisplay = new Point(this.Size.Width / 2, this.Size.Height / 2);
+            Point centerOfSnakePanel = new Point(SnakePanel.Size.Width / 2, SnakePanel.Height / 2);
+            SnakePanel.Location = new Point(centerOfDisplay.X - centerOfSnakePanel.X, centerOfDisplay.Y - centerOfSnakePanel.Y);
         }
 
         private void SnakeDisplay_Load(object sender, EventArgs e)
@@ -52,7 +61,7 @@ namespace Snake.Implementation
                 SnakePanel.Invalidate();
             };
 
-            SnakeTimer.Interval = 10;
+            SnakeTimer.Interval = 100;
             SnakeTimer.Enabled = true;
 
             //RunBGMusic();
@@ -60,9 +69,10 @@ namespace Snake.Implementation
 
         private void RunBGMusic()
         {
-            System.IO.Stream str = Properties.Resources.techno;
-            System.Media.SoundPlayer snd = new System.Media.SoundPlayer(str);
-            snd.PlayLooping();
+            //System.IO.Stream str = Properties.Resources.bgmusic;
+            //System.Media.SoundPlayer player = new System.Media.SoundPlayer();
+            //player.Stream = Properties.Resources.bgmusic;
+            //player.PlayLooping();
         }
 
         private void DrawGame(object sender, PaintEventArgs e)
@@ -87,7 +97,9 @@ namespace Snake.Implementation
             Board board = game.Board;
             foreach (Block block in board.GetMatrix())
             {
-                gp.DrawRectangle(new Pen(block.Color), new Rectangle(block.Location, new Size(block.Size.X, block.Size.Y)));
+
+                //   gp.DrawRectangle(new Pen(block.Color), new Rectangle(block.Location, new Size(block.Size.X, block.Size.Y)));
+                gp.DrawRectangle(new Pen(block.Color), block.Location.X * block.Size.X, block.Location.Y * block.Size.Y, block.Size.X, block.Size.Y);
             }
         }
 
@@ -96,6 +108,11 @@ namespace Snake.Implementation
             SnakeTimer.Enabled = false;
             MessageBox.Show("Game over");
             Application.Exit();
+        }
+
+        private void SnakeDisplay_Resize(object sender, EventArgs e)
+        {
+            CentrarSnakePanel();
         }
     }
 }

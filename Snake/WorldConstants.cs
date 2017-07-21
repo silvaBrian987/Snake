@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Drawing;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace Snake
 {
@@ -15,11 +15,13 @@ namespace Snake
         //public static Point INITIAL_LOCATION = new Point(10, 10);
         public static Point INITIAL_LOCATION = new Point(0, 0);
 
-        public static Size GetDisplaySize()
+        public static System.Drawing.Size GetDisplaySize()
         {
-            Size display = new Size();
-            display.Height = GAME_DISPLAY_SIZE.Y + (BLOCK_SIZE.Y * 2);
-            display.Width = GAME_DISPLAY_SIZE.X + (BLOCK_SIZE.X * 2);
+            System.Drawing.Size display = new System.Drawing.Size();
+            //display.Height = GAME_DISPLAY_SIZE.Y + (BLOCK_SIZE.Y * 2);
+            //display.Width = GAME_DISPLAY_SIZE.X + (BLOCK_SIZE.X * 2);
+            display.Height = GAME_DISPLAY_SIZE.Y;
+            display.Width = GAME_DISPLAY_SIZE.X;
             return display;
         }
 
@@ -27,10 +29,10 @@ namespace Snake
         {
             Dictionary<Keys, Point> Movements = new Dictionary<Keys, Point>();
 
-            Movements.Add(Keys.Up, new Point(0, -BLOCK_SIZE.Y));
-            Movements.Add(Keys.Down, new Point(0, BLOCK_SIZE.Y));
-            Movements.Add(Keys.Right, new Point(BLOCK_SIZE.X, 0));
-            Movements.Add(Keys.Left, new Point(-BLOCK_SIZE.X, 0));
+            Movements.Add(Keys.Up, new Point(0, -1));
+            Movements.Add(Keys.Down, new Point(0, 1));
+            Movements.Add(Keys.Right, new Point(1, 0));
+            Movements.Add(Keys.Left, new Point(-1, 0));
 
             return Movements;
         }

@@ -12,7 +12,7 @@ namespace Snake
         public SnakeBlock Next { get; set; }
         public SnakeBlock Previous { get; set; }
 
-        protected SnakeBlock(Point Size, Point Location, Color Color) : base(Size, Location, Color)
+        protected SnakeBlock(Point Size, Point Location, System.Drawing.Color Color) : base(Size, Location, Color)
         {
             OnCollision += (game) =>
             {
@@ -20,7 +20,7 @@ namespace Snake
             };
         }
 
-        internal SnakeBlock(Point Size, Point Location) : this(Size, Location, Color.Red)
+        internal SnakeBlock(Point Size, Point Location) : this(Size, Location, System.Drawing.Color.Red)
         {
         }
 
