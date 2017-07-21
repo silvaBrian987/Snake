@@ -25,7 +25,7 @@ namespace Snake
             DefineIfReplacements();
 
             InitializeBoard();
-            InitializeSnake();
+            //InitializeSnake();
             GenerateFood();
             Direction = WorldConstants.GetPosibleMovements()[System.Windows.Forms.Keys.Right];
         }
@@ -45,7 +45,7 @@ namespace Snake
                 Console.WriteLine("Snake was on " + Snake + " when collisioned with " + otherBlock + "!");
                 game.GameEnds();
             });
-             
+
             MatrixFinderActions.Add(true, (x, y) => { return new int[] { x, y }; });
             //MatrixFinderActions.Add(false, (x, y) => { return new int[] { x, y }; });
 
@@ -79,36 +79,48 @@ namespace Snake
                     Matrix[i, j] = new EmptyBlock(WorldConstants.BLOCK_SIZE, new Point(auxX, auxY));
                     auxY += 1;
                 }
-                auxX +=1;
+                auxX += 1;
                 auxY = WorldConstants.INITIAL_LOCATION.Y;
             }
         }
 
-        private void InitializeSnake()
+        internal void InitializeSnake()
         {
             int auxX = Matrix.GetLength(0) / 2;
             int auxY = Matrix.GetLength(1) / 2;
 
             Snake = new SnakeBlock(Matrix[auxX, auxY]);
             SnakeBlock Next = Snake;
-            for (int i = 1; i < 6; i++)
-            {
-                auxY += Direction.Y;
-                auxX += Direction.X;
-                Next.Next = new SnakeBlock(Matrix[auxX, auxY]);
-                Next.Next.Previous = Next;
-                Next = Next.Next;
-            }
+            //for (int i = 1; i < 6; i++)
+            //{
+            //    auxY += Direction.Y;
+            //    auxX += Direction.X;
+            //    Next.Next = new SnakeBlock(Matrix[auxX, auxY]);
+            //    Next.Next.Previous = Next;
+            //    Next = Next.Next;
+            //}
+
             Next.Next = new EmptySnakeBlock(Matrix[auxX, auxY + 1]);
             Next.Next.Previous = Next;
-
             AddToMatrix(Snake, new int[] { auxX, auxY });
+
+            MoveSnake();
+            Snake.Eat(game);
+            MoveSnake();
+            Snake.Eat(game);
+            MoveSnake();
+            Snake.Eat(game);
+            MoveSnake();
+            Snake.Eat(game);
+            MoveSnake();
+            Snake.Eat(game);
         }
 
         public void MoveSnake()
         {
             SnakeCollided();
-            Snake.Move(game, new Point(Snake.Location.X + Direction.X, Snake.Location.Y + Direction.Y));
+            //Snake.Move(game, new Point(Snake.Location.X + Direction.X, Snake.Location.Y + Direction.Y));
+            Snake.Move(game, Utils.SumPoints(Snake.Location, Direction));
         }
 
         private void SnakeCollided()
@@ -118,12 +130,13 @@ namespace Snake
             try
             {
                 Collisionables[NextBlock.GetType()].Invoke(game, NextBlock);
-            }catch(NullReferenceException ex)
+            }
+            catch (NullReferenceException ex)
             {
                 Console.WriteLine("Termina el juego");
                 game.GameEnds();
             }
-           
+
         }
 
         public Block[,] GetMatrix()
@@ -147,7 +160,7 @@ namespace Snake
 
         public Block GetBlockOnMatrix(Point point)
         {
-            return GetBlockOnMatrix(point.X , point.Y );
+            return GetBlockOnMatrix(point.X, point.Y);
         }
 
         public void ChangeSnakeDirection(Point NewDirection)

@@ -106,7 +106,7 @@ namespace Snake.Implementation
         private void OnGameEnd()
         {
             SnakeTimer.Enabled = false;
-            MessageBox.Show("Game over");
+            MessageBox.Show(this, "***YOU DIED***" + Environment.NewLine + game.Player.Points + " food eaten", "GAME OVER");
             Application.Exit();
         }
 

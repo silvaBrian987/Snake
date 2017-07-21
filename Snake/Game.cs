@@ -17,6 +17,7 @@ namespace Snake
         {
             Player = player;
             Board = new Board(this);
+            Board.InitializeSnake();
         }
 
         internal void GameEnds()
